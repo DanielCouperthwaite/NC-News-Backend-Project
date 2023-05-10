@@ -3,12 +3,13 @@ const app = require("../app");
 const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data/index");
 const connection = require("../db/connection");
+const endpoints = require('../endpoints.json')
 
 beforeEach(() => seed(testData));
 
 afterAll(() => connection.end());
 
-describe("/api", () => {
+describe("/api/topics", () => {
     test("GET - status 200 - Returns all topics", () => {
       return request(app)
         .get("/api/topics")
@@ -25,7 +26,17 @@ describe("/api", () => {
         .expect(404)
         .then((res) => {
           expect(res.body).toEqual({ msg: 'Oh no! Please enter a valid url' });
-          
         });
     });
 })
+
+describe("/api", () => {
+  test("GET - status 200 - Returns all endpoints", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.endpoints).toEqual(endpoints);
+      });
+  });
+});
