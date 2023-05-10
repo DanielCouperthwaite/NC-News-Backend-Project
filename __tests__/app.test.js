@@ -40,3 +40,38 @@ describe("/api", () => {
       });
   });
 });
+
+describe("/api/articles/:article_id", () => {
+  test("GET - status 200 - Returns a valid article", () => {
+    return request(app)
+    .get("/api/articles/2")
+    .expect(200)
+    .then((res) => {
+      expect(res.body.article.article_id).toBe(2)
+      expect(res.body.article).toHaveProperty('author')
+      expect(res.body.article).toHaveProperty('title')
+      expect(res.body.article).toHaveProperty('topic')
+      expect(res.body.article).toHaveProperty('author')
+      expect(res.body.article).toHaveProperty('body')
+      expect(res.body.article).toHaveProperty('created_at')
+      expect(res.body.article).toHaveProperty('votes')
+      expect(res.body.article).toHaveProperty('article_img_url')
+    })
+  })
+  test("GET - look for article_id that is too high - Returns an error", () => {
+    return request(app)
+      .get("/api/articles/9999")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe('Oh no! Please enter a valid article ID!');
+      });
+  });
+  test("GET - look for nonsense - Returns an error", () => {
+    return request(app)
+      .get("/api/articles/nonsense")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe('Oh no! Please enter a valid article ID!');
+      });
+  });
+})
