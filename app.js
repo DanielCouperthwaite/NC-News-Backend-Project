@@ -1,10 +1,10 @@
 const express = require('express')
 const app = express();
-const {getTopics} = require('./controllers/controllers')
+const {getTopics, getApiInfo} = require('./controllers/controllers')
 
 app.get('/api/topics', getTopics)
 
-console.log('in app')
+app.get('/api', getApiInfo)
 
 app.all('*', (req, res) => {
     res.status(404).send({ msg: 'Oh no! Please enter a valid url' })
