@@ -14,7 +14,7 @@ app.all('*', (req, res) => {
 
 app.use((err, req, res, next) => {
     if(err.code === '22P02'){
-        res.status(404).send({msg: 'Oh no! Please enter a valid article ID!'})
+        res.status(400).send({msg: 'Oh no! Please enter a valid article ID!'})
     }
     next(err)
 })
