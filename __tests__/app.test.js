@@ -5,6 +5,7 @@ const testData = require("../db/data/test-data/index");
 const connection = require("../db/connection");
 const endpoints = require('../endpoints.json')
 
+
 beforeEach(() => seed(testData));
 
 afterAll(() => connection.end());
@@ -86,6 +87,9 @@ describe("/api/articles/:article_id/comments", () => {
     .get("/api/articles/9/comments")
     .expect(200)
     .then((res) => {
+      expect(res.body.comments).toBeSortedBy('created_at', {
+        descending: true
+      }),
       res.body.comments.forEach((comment) => {
         expect(comment).toEqual(
           expect.objectContaining({
@@ -98,7 +102,7 @@ describe("/api/articles/:article_id/comments", () => {
           })
         )
       })
-      })
+    })
   })
   test("GET - look for article_id that is too high - Returns an error", () => {
     return request(app)
