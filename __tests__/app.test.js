@@ -87,6 +87,7 @@ describe("/api/articles/:article_id/comments", () => {
     .get("/api/articles/9/comments")
     .expect(200)
     .then((res) => {
+      expect(res.body.comments.length).toBe(2)
       expect(res.body.comments).toBeSortedBy('created_at', {
         descending: true
       }),
@@ -109,7 +110,7 @@ describe("/api/articles/:article_id/comments", () => {
       .get("/api/articles/2112/comments")
       .expect(404)
       .then((res) => {
-        expect(res.body.msg).toBe('Oh no! Please enter a valid article ID!');
+        expect(res.body.msg).toBe('Article not found');
       });
   });
   test("GET - look for nonsense - Returns an error", () => {
@@ -120,4 +121,12 @@ describe("/api/articles/:article_id/comments", () => {
         expect(res.body.msg).toBe('Oh no! Please enter a valid article ID!');
       });
   });
-})
+  test("GET - look for an article with no comments - Returns 200 status and empty array", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.comments).toEqual([]);
+      });
+    })
+  })
