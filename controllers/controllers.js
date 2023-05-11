@@ -1,4 +1,4 @@
-const {fetchTopics, fetchArticle} = require('../models/models')
+const {fetchTopics, fetchArticle, fetchComments} = require('../models/models')
 
 const endpoints = require('../endpoints.json')
 
@@ -28,3 +28,12 @@ exports.getArticleById = (req, res, next) => {
     })
 }
 
+exports.getComments = (req, res, next) => {
+    const articleId = req.params.article_id
+    fetchComments(articleId).then((comments) => {
+        res.status(200).send({comments})
+    })
+    .catch((err) => {
+        next(err)
+    })
+}

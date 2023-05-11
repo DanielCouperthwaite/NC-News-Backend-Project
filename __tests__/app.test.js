@@ -79,3 +79,41 @@ describe("/api/articles/:article_id", () => {
       });
   });
 })
+
+describe("/api/articles/:article_id/comments", () => {
+  test("GET - status 200 - Returns a comment with a valid article id", () => {
+    return request(app)
+    .get("/api/articles/9/comments")
+    .expect(200)
+    .then((res) => {
+      res.body.comments.forEach((comment) => {
+        expect(comment).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            article_id: expect.any(Number),
+            votes: expect.any(Number),
+            author: expect.any(String),
+            body: expect.any(String),
+            created_at: expect.any(String)
+          })
+        )
+      })
+      })
+  })
+  test("GET - look for article_id that is too high - Returns an error", () => {
+    return request(app)
+      .get("/api/articles/2112/comments")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe('Oh no! Please enter a valid article ID!');
+      });
+  });
+  test("GET - look for nonsense - Returns an error", () => {
+    return request(app)
+      .get("/api/articles/nonsense/comments")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe('Oh no! Please enter a valid article ID!');
+      });
+  });
+})
