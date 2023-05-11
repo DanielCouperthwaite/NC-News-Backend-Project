@@ -81,6 +81,7 @@ describe("/api/articles/:article_id", () => {
   });
 })
 
+
 describe("/api/articles/:article_id/comments", () => {
   test("GET - status 200 - Returns a comment with a valid article id", () => {
     return request(app)
@@ -130,3 +131,31 @@ describe("/api/articles/:article_id/comments", () => {
       });
     })
   })
+describe("/api/articles", () => {
+  test("GET - status 200 - Returns all articles", () => {
+    return request(app)
+    .get("/api/articles")
+    .expect(200)
+    .then((res) => { res.body.articles.forEach( (articles) => {
+      expect(articles).toEqual(
+        expect.not.objectContaining({
+          body: expect.any(String)
+        }),
+        expect.objectContaining({
+          author: expect.any(String),
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String)
+        })
+      )
+      })
+      expect(res.body.articles).toBeSortedBy('created_at', {
+        descending: true,
+    })     
+    })
+  })
+})
+

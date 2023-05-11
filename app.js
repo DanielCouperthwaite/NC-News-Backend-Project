@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express();
-const {getTopics, getApiInfo, getArticleById, getComments} = require('./controllers/controllers')
+
+const {getTopics, getApiInfo, getArticleById, getComments, getAllArticles} = require('./controllers/controllers')
+
 
 app.get('/api/topics', getTopics)
 
@@ -8,7 +10,11 @@ app.get('/api', getApiInfo)
 
 app.get('/api/articles/:article_id', getArticleById)
 
+
 app.get('/api/articles/:article_id/comments', getComments)
+
+app.get('/api/articles', getAllArticles)
+
 
 app.all('*', (req, res) => {
     res.status(404).send({ msg: 'Oh no! Please enter a valid url' })
