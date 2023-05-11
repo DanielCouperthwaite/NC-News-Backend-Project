@@ -1,4 +1,5 @@
 const connection = require('../db/connection')
+const { checkIfExists } = require('../db/seeds/utils')
 
 exports.fetchTopics = () => {
     return connection.query('SELECT * FROM topics;').then((result) => {    
@@ -16,6 +17,18 @@ exports.fetchArticle = (id) => {
     })
 }
 
+
+exports.fetchComments = (articleId) => {
+    return checkIfExists(articleId).then(() => {
+        return connection.query(`SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC;`, [articleId])
+        .then((result) => {
+            return result.rows
+    })
+    
+    })
+
+}
+
 exports.fetchAllArticles = () => {
     return connection.query(`
     SELECT articles.author, articles.title, articles.article_id, articles.topic, 
@@ -28,3 +41,4 @@ exports.fetchAllArticles = () => {
         return result.rows;
     })
 } 
+
