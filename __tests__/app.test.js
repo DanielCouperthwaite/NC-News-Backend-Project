@@ -131,6 +131,7 @@ describe("/api/articles/:article_id/comments", () => {
       });
     })
   })
+
 describe("/api/articles", () => {
   test("GET - status 200 - Returns all articles", () => {
     return request(app)
@@ -159,3 +160,48 @@ describe("/api/articles", () => {
   })
 })
 
+describe("/api/articles/:article_id/comments", () => {
+  test("POST - status: 201 - responds with success and a comment object", () => {
+    const newComment =  {
+      author: "butter_bridge",
+      body: "I am making a comment",
+    }
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .expect(201)
+      .then((response) => {
+        expect(response.body.comment.body).toBe("I am making a comment")
+        expect(response.body.comment.author).toBe("butter_bridge");
+      });
+  });
+  test("POST - status: 400 - responds with an error message with an invalid user", () => {
+    const newComment =  {
+      author: "Daniel",
+      body: "I am making a comment",
+    }
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe('Oh no! Please enter a valid username!');
+      });
+  })
+  test("POST - add a comment to an article id that is too high - Returns an error", () => {
+    return request(app)
+      .get("/api/articles/2112/comments")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe('Article not found');
+      });
+  });
+  test("POST - look for nonsense - Returns an error", () => {
+    return request(app)
+      .get("/api/articles/nonsense/comments")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe('Oh no! Please enter a valid article ID!');
+      });
+  });
+})
