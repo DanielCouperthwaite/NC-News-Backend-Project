@@ -10,7 +10,7 @@ beforeEach(() => seed(testData));
 
 afterAll(() => connection.end());
 
-describe("/api/topics", () => {
+describe("GET - /api/topics", () => {
     test("GET - status 200 - Returns all topics", () => {
       return request(app)
         .get("/api/topics")
@@ -42,7 +42,7 @@ describe("/api", () => {
   });
 });
 
-describe("/api/articles/:article_id", () => {
+describe("GET - /api/articles/:article_id", () => {
   test("GET - status 200 - Returns a valid article", () => {
     return request(app)
     .get("/api/articles/2")
@@ -82,7 +82,7 @@ describe("/api/articles/:article_id", () => {
 })
 
 
-describe("/api/articles/:article_id/comments", () => {
+describe("GET - /api/articles/:article_id/comments", () => {
   test("GET - status 200 - Returns a comment with a valid article id", () => {
     return request(app)
     .get("/api/articles/9/comments")
@@ -132,7 +132,7 @@ describe("/api/articles/:article_id/comments", () => {
     })
   })
 
-describe("/api/articles", () => {
+describe("GET - /api/articles", () => {
   test("GET - status 200 - Returns all articles", () => {
     return request(app)
     .get("/api/articles")
@@ -160,7 +160,7 @@ describe("/api/articles", () => {
   })
 })
 
-describe("/api/articles/:article_id/comments", () => {
+describe("POST - /api/articles/:article_id/comments", () => {
   test("POST - status: 201 - responds with success and a comment object", () => {
     const newComment =  {
       author: "butter_bridge",
@@ -204,4 +204,69 @@ describe("/api/articles/:article_id/comments", () => {
         expect(res.body.msg).toBe('Oh no! Please enter a valid article ID!');
       });
   });
+})
+
+describe("PATCH - /api/articles/:article_id", () => {
+  test("PATCH - status: 201 - Returns an expected number of one added vote", () => {
+    const vote =  { inc_votes : 1 }
+    return request(app)
+      .patch("/api/articles/1")
+      .send(vote)
+      .expect(201)
+      .then((response) => {
+        expect(response.body.article.votes).toBe(101)
+      });
+    });
+  test("PATCH - status: 201 - Returns an expected number of 57 removed votes", () => {
+    const vote =  { inc_votes : -57 }
+    return request(app)
+      .patch("/api/articles/1")
+      .send(vote)
+      .expect(201)
+      .then((response) => {
+        expect(response.body.article.votes).toBe(43)
+      });
+    });
+    test("PATCH - status 201 - Returns a whole valid article with updated votes", () => {
+      const vote =  { inc_votes : 20 }
+      return request(app)
+      .patch("/api/articles/1")
+      .send(vote)
+      .expect(201)
+      .then((response) => {
+        expect(response.body.article.votes).toBe(120);
+          expect(response.body.article).toEqual(
+            expect.objectContaining({
+              author: expect.any(String),
+              title: expect.any(String),
+              topic: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              article_img_url: expect.any(String)
+            })
+          )
+        })
+    })
+    test("PATCH - add a comment to an article id that is too high - Returns an error", () => {
+      const vote =  { inc_votes : 20 }
+      return request(app)
+        .patch("/api/articles/2112")
+        .send(vote)
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe('Article not found');
+        });
+    });
+    test("PATCH - look for nonsense - Returns an error", () => {
+      const vote =  { inc_votes : 20 }
+      return request(app)
+        .patch("/api/articles/nonsense")
+        .send(vote)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe('Oh no! Please enter a valid article ID!');
+        });
+    });
 })

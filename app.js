@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express();
 
-const {getTopics, getApiInfo, getArticleById, getComments, getAllArticles, postComment} = require('./controllers/controllers')
+const {getTopics, getApiInfo, getArticleById, getComments, getAllArticles, postComment, patchArticle} = require('./controllers/controllers')
 
 app.use(express.json())
 
@@ -17,6 +17,8 @@ app.get('/api/articles', getAllArticles)
 
 app.post('/api/articles/:article_id/comments', postComment)
 
+app.patch('/api/articles/:article_id', patchArticle)
+
 app.all('*', (req, res) => {
     res.status(404).send({ msg: 'Oh no! Please enter a valid url' })
 });
@@ -27,7 +29,9 @@ app.use((err, req, res, next) => {
     } else if(err.code === '23503'){
         res.status(400).send({msg: 'Oh no! Please enter a valid username!'})
     }
-    else next(err)
+    else{
+        next(err)
+    } 
 })
 
 
