@@ -160,7 +160,7 @@ describe("/api/articles", () => {
   })
 })
 
-describe.only("/api/articles/:article_id/comments", () => {
+describe("/api/articles/:article_id/comments", () => {
   test("POST - status: 201 - responds with success and a comment object", () => {
     const newComment =  {
       author: "butter_bridge",
