@@ -1,5 +1,5 @@
 
-const {fetchTopics, fetchArticle, fetchComments, fetchAllArticles, insertComment} = require('../models/models')
+const {fetchTopics, fetchArticle, fetchComments, fetchAllArticles, insertComment, alterArticle} = require('../models/models')
 
 
 const endpoints = require('../endpoints.json')
@@ -55,6 +55,17 @@ exports.postComment = (req, res, next) => {
     insertComment(req.body, articleId)
     .then((comment) =>{
         res.status(201).send({ comment })
+    })
+    .catch((err) => {
+        next(err)
+    })
+}
+
+exports.patchArticle = (req, res, next) => {
+    const articleId = req.params.article_id
+    alterArticle(req.body.inc_votes, articleId)
+    .then((article) => {
+        res.status(201).send({ article })
     })
     .catch((err) => {
         next(err)
