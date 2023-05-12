@@ -42,3 +42,18 @@ exports.fetchAllArticles = () => {
     })
 } 
 
+exports.insertComment = (newComment, articleId) => {
+    const {author, body} = newComment;
+    return connection
+        .query(
+            `INSERT INTO comments 
+            (author, body, article_id)
+            VALUES 
+            ($1, $2, $3) 
+            RETURNING *;`,
+            [author, body, articleId]
+        )
+        .then(({ rows }) => (rows[0]))
+}
+
+
