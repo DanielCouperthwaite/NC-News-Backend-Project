@@ -43,7 +43,7 @@ exports.fetchAllArticles = () => {
 } 
 
 exports.insertComment = (newComment, articleId) => {
-    const {author, body} = newComment;
+    const {username, body} = newComment;
     return connection
         .query(
             `INSERT INTO comments 
@@ -51,7 +51,7 @@ exports.insertComment = (newComment, articleId) => {
             VALUES 
             ($1, $2, $3) 
             RETURNING *;`,
-            [author, body, articleId]
+            [username, body, articleId]
         )
         .then(({ rows }) => (rows[0]))
 }

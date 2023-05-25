@@ -163,7 +163,7 @@ describe("GET - /api/articles", () => {
 describe("POST - /api/articles/:article_id/comments", () => {
   test("POST - status: 201 - responds with success and a comment object", () => {
     const newComment =  {
-      author: "butter_bridge",
+      username: "butter_bridge",
       body: "I am making a comment",
     }
     return request(app)
@@ -177,7 +177,7 @@ describe("POST - /api/articles/:article_id/comments", () => {
   });
   test("POST - status: 400 - responds with an error message with an invalid user", () => {
     const newComment =  {
-      author: "Daniel",
+      username: "Daniel",
       body: "I am making a comment",
     }
     return request(app)
