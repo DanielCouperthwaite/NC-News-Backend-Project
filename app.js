@@ -2,7 +2,7 @@ const express = require('express')
 const app = express();
 const cors = require('cors')
 
-const {getTopics, getApiInfo, getArticleById, getComments, getAllArticles, postComment, patchArticle} = require('./controllers/controllers')
+const {getTopics, getApiInfo, getArticleById, getComments, getAllArticles, postComment, patchArticle, deleteComment} = require('./controllers/controllers')
 
 app.use(cors());
 
@@ -21,6 +21,8 @@ app.get('/api/articles', getAllArticles)
 app.post('/api/articles/:article_id/comments', postComment)
 
 app.patch('/api/articles/:article_id', patchArticle)
+
+app.delete('/api/comments/:comment_id', deleteComment)
 
 app.all('*', (req, res) => {
     res.status(404).send({ msg: 'Oh no! Please enter a valid url' })

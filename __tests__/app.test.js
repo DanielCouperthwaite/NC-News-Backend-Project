@@ -270,3 +270,20 @@ describe("PATCH - /api/articles/:article_id", () => {
         });
     });
 })
+
+describe("DELETE - /api/comments/:comment_id", () => {
+  test("DELETE - responds with status 204 and no content", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204);
+  })
+  test("DELETE - responds with status 400 when given a nonsense comment number", () => {
+    return request(app)
+      .delete("/api/comments/nonsense")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe('Oh no! Please enter a valid article ID!');
+      });
+  })
+  
+})

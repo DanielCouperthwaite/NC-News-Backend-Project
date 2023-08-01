@@ -72,3 +72,11 @@ exports.alterArticle = (numberVotes, articleId) => {
     })
 }
 
+exports.removeComment = (commentId) => {
+    return connection
+    .query(
+        `DELETE FROM comments
+        WHERE comment_id = $1;`,
+        [commentId]
+    )
+}

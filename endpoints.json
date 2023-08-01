@@ -76,7 +76,7 @@
     }
   },
    "POST /api/articles/:article_id/comments": {
-    "description": "Adds an article to the saved list associated with a particular article",
+    "description": "Adds a comment to the saved list associated with a particular article",
     "queries": ["author", "topic", "sort_by", "order"],
     "exampleResponse": {
       "comments": [
