@@ -1,5 +1,5 @@
 
-const {fetchTopics, fetchArticle, fetchComments, fetchAllArticles, insertComment, alterArticle} = require('../models/models')
+const {fetchTopics, fetchArticle, fetchComments, fetchAllArticles, insertComment, alterArticle, removeComment} = require('../models/models')
 
 
 const endpoints = require('../endpoints.json')
@@ -66,6 +66,17 @@ exports.patchArticle = (req, res, next) => {
     alterArticle(req.body.inc_votes, articleId)
     .then((article) => {
         res.status(201).send({ article })
+    })
+    .catch((err) => {
+        next(err)
+    })
+}
+
+exports.deleteComment = (req, res, next) => {
+    const commentId = req.params.comment_id
+    removeComment(commentId)
+    .then(() => {
+        res.status(204).send()
     })
     .catch((err) => {
         next(err)
