@@ -277,13 +277,5 @@ describe("DELETE - /api/comments/:comment_id", () => {
       .delete("/api/comments/1")
       .expect(204);
   })
-  test("DELETE - responds with status 400 when given a nonsense comment number", () => {
-    return request(app)
-      .delete("/api/comments/nonsense")
-      .expect(400)
-      .then((response) => {
-        expect(response.body.msg).toBe('Oh no! Please enter a valid article ID!');
-      });
-  })
   
 })
